@@ -7,6 +7,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.security.PrivateKey;
+import java.security.PublicKey;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
@@ -26,7 +28,7 @@ public class User {
     @Column(nullable = false)
     private String phone;
     @Column(nullable = false, unique = true, name = "user_name")
-    private String userName;
+    private String username;
     @Column(nullable = false)
     private String password;
     private String email;
@@ -34,10 +36,10 @@ public class User {
     private boolean acceptedStatus;
     @Column(nullable = false)
     private boolean gender;
-    @Column(name = "public_key")
-    private String publicKey;
-    @Column(name = "private_key")
-    private String privateKey;
+    @Column(name = "public_key",length = Integer.MAX_VALUE)
+    private PublicKey publicKey;
+    @Column(name = "private_key",length = Integer.MAX_VALUE)
+    private PrivateKey privateKey;
     private String image;
     @Temporal(TemporalType.DATE)
     private Date date;

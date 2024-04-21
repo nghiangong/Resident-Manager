@@ -1,5 +1,5 @@
 package com.vinhome.residentmanagement.entity;
 
 public enum RoleEnum {
-    ADMIN, USER, GATEKEEPER
+    ROLE_ADMIN, ROLE_USER, ROLE_GATEKEEPER
 }

@@ -1,19 +1,24 @@
-package com.vinhome.residentmanagement.dtos;
+package com.vinhome.residentmanagement.response;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.vinhome.residentmanagement.dtos.GateDto;
+import com.vinhome.residentmanagement.dtos.HouseDto;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.util.Date;
-import java.util.Set;
+import java.util.List;
 
 @Getter
 @Setter
-public class UserPostDto {
+@AllArgsConstructor
+public class JwtResponse {
+    private String token;
     private Long id;
     private String name;
     private String phone;
     private String username;
-    private String password;
     private String email;
     private boolean acceptedStatus;
     private boolean gender;
@@ -22,8 +27,8 @@ public class UserPostDto {
     private Long ownId;
     private String idCard;
     private boolean createQrPermission;
+    private HouseDto house;
+    private GateDto gate;
     private Date deletedAt;
-    private Long houseId;
-    private Long gateId;
-    private Set<Long> roleIds;
+    List<String> roles;
 }

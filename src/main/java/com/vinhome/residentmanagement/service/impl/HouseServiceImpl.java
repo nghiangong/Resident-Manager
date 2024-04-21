@@ -1,6 +1,8 @@
 package com.vinhome.residentmanagement.service.impl;
 
+import com.vinhome.residentmanagement.dtos.GateDto;
 import com.vinhome.residentmanagement.dtos.HouseDto;
+import com.vinhome.residentmanagement.entity.Gate;
 import com.vinhome.residentmanagement.entity.History;
 import com.vinhome.residentmanagement.entity.House;
 import com.vinhome.residentmanagement.entity.User;
@@ -8,6 +10,9 @@ import com.vinhome.residentmanagement.exception.EntityNotFoundException;
 import com.vinhome.residentmanagement.mappers.MapStructMapper;
 import com.vinhome.residentmanagement.repository.HouseRepository;
 import com.vinhome.residentmanagement.service.HouseService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -46,10 +51,23 @@ public class HouseServiceImpl implements HouseService {
     }
 
     @Override
+    public Page<HouseDto> findAllHouse(int pageNumber, int pageSize) {
+        PageRequest pageRequest = PageRequest.of(pageNumber - 1, pageSize);
+        List<House> houses = houseRepository.findAllHouses();
+        List<HouseDto> houseDtos = mapStructMapper.housesToHouseDtos(houses);
+        int start = (int) pageRequest.getOffset();
+        int end = Math.min((start + pageRequest.getPageSize()), houseDtos.size());
+        return new PageImpl<>(houseDtos.subList(start, end), pageRequest, houseDtos.size());
+    }
+
+    @Override
     public HouseDto updateHouse(Long id, HouseDto newHouse) {
         Optional<House> existingHouse = houseRepository.findById(id);
         if (existingHouse.isPresent()) {
             House oldHouse = existingHouse.get();
+            if (newHouse.getDeletedAt() != null && houseRepository.livingPeopleExist(id)) {
+                throw new RuntimeException("Còn tồn tại người đang sinh sống");
+            }
             mapStructMapper.updateHouseFromDTO(newHouse, oldHouse);
             return mapStructMapper.houseToHouseDto(houseRepository.save(oldHouse));
         } else {

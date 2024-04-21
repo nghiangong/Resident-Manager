@@ -1,11 +1,16 @@
 package com.vinhome.residentmanagement.service.impl;
 
 import com.vinhome.residentmanagement.dtos.GateDto;
+import com.vinhome.residentmanagement.dtos.UserGetDto;
 import com.vinhome.residentmanagement.entity.Gate;
+import com.vinhome.residentmanagement.entity.User;
 import com.vinhome.residentmanagement.exception.EntityNotFoundException;
 import com.vinhome.residentmanagement.mappers.MapStructMapper;
 import com.vinhome.residentmanagement.repository.GateRepository;
 import com.vinhome.residentmanagement.service.GateService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -30,9 +35,9 @@ public class GateServiceImpl implements GateService {
     @Override
     public GateDto getGateById(Long gateId) {
         Optional<Gate> optionalGate = gateRepository.findById(gateId);
-        if(optionalGate.isPresent()){
+        if (optionalGate.isPresent()) {
             return mapStructMapper.gateToGateDto(optionalGate.get());
-        }else{
+        } else {
             throw new EntityNotFoundException(Gate.class, "id", gateId.toString());
         }
     }
@@ -44,13 +49,26 @@ public class GateServiceImpl implements GateService {
     }
 
     @Override
+    public Page<GateDto> findAllGate(int pageNumber, int pageSize) {
+        PageRequest pageRequest = PageRequest.of(pageNumber - 1, pageSize);
+        List<Gate> gates = gateRepository.findAllGates();
+        List<GateDto> gateDtos = mapStructMapper.gatesToGateDtos(gates);
+        int start = (int) pageRequest.getOffset();
+        int end = Math.min((start + pageRequest.getPageSize()), gateDtos.size());
+        return new PageImpl<>(gateDtos.subList(start, end), pageRequest, gateDtos.size());
+    }
+
+    @Override
     public GateDto updateGate(Long id, GateDto gateDto) {
         Optional<Gate> existingGate = gateRepository.findById(id);
-        if(existingGate.isPresent()){
+        if (existingGate.isPresent()) {
             Gate oldGate = existingGate.get();
+            if (gateDto.getDeletedAt() != null && gateRepository.workingPeopleExist(id)) {
+                throw new RuntimeException("Còn tồn tại người đang làm việc tại cổng");
+            }
             mapStructMapper.updateGateFromDTO(gateDto, oldGate);
             return mapStructMapper.gateToGateDto(gateRepository.save(oldGate));
-        }else {
+        } else {
             throw new EntityNotFoundException(Gate.class, "id", id.toString());
         }
     }

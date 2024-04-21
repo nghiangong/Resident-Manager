@@ -1,17 +1,20 @@
 package com.vinhome.residentmanagement.controller;
 
+import com.vinhome.residentmanagement.dtos.GateDto;
 import com.vinhome.residentmanagement.dtos.HouseDto;
 import com.vinhome.residentmanagement.dtos.UserGetDto;
 import com.vinhome.residentmanagement.dtos.UserPostDto;
 import com.vinhome.residentmanagement.entity.House;
 import com.vinhome.residentmanagement.exception.EntityNotFoundException;
 import com.vinhome.residentmanagement.service.HouseService;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
 
+@CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
 @RequestMapping("/api/v1")
 public class HouseController {
@@ -28,8 +31,13 @@ public class HouseController {
     }
 
     @GetMapping("/houses")
-    public List<HouseDto> getAllHouses() {
-        return houseService.getAllHouses();
+    public ResponseEntity<List<HouseDto>> getAllHouses() {
+        return ResponseEntity.ok(houseService.getAllHouses());
+    }
+
+    @GetMapping("/houses/page")
+    public ResponseEntity<Page<HouseDto>> getHouses(@RequestParam int pageNumber, @RequestParam int pageSize) {
+        return ResponseEntity.ok(houseService.findAllHouse(pageNumber, pageSize));
     }
 
     @GetMapping("/houses/{id}")

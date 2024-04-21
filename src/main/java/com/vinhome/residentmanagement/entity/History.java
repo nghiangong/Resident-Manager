@@ -24,7 +24,7 @@ public class History {
     private Long id;
     @Column(nullable = false)
     private String name;
-    private String gender;
+    private boolean gender;
     @Column(nullable = false)
     private LocalDateTime date;
     @Column(nullable = false, name = "is_resident")
@@ -40,4 +40,6 @@ public class History {
     private User qrCreator;
     @Column(nullable = false, name = "read_status",columnDefinition = "boolean default false")
     private boolean readStatus;
+    @Lob
+    private String note;
 }

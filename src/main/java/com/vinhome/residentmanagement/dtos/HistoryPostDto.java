@@ -11,11 +11,12 @@ import java.util.Date;
 public class HistoryPostDto {
     private Long id;
     private String name;
-    private String gender;
+    private boolean gender;
     private LocalDateTime date;
     private boolean isResident;
     private Date deletedAt;
     private Long gateId;
     private Long qrCreatorId;
     private boolean readStatus;
+    private String note;
 }

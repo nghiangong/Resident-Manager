@@ -6,11 +6,13 @@ import com.vinhome.residentmanagement.dtos.UserPostDto;
 import com.vinhome.residentmanagement.exception.EntityNotFoundException;
 import com.vinhome.residentmanagement.service.GateService;
 import com.vinhome.residentmanagement.service.UserService;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
 @RequestMapping("/api/v1")
 public class GateController {
@@ -27,8 +29,13 @@ public class GateController {
     }
 
     @GetMapping("/gates")
-    public List<GateDto> getAllGates() {
-        return gateService.getAllGates();
+    public ResponseEntity<List<GateDto>> getAllGates() {
+        return ResponseEntity.ok(gateService.getAllGates());
+    }
+
+    @GetMapping("/gates/page")
+    public ResponseEntity<Page<GateDto>> getGates(@RequestParam int pageNumber, @RequestParam int pageSize) {
+        return ResponseEntity.ok(gateService.findAllGate(pageNumber, pageSize));
     }
 
     @GetMapping("/gates/{id}")

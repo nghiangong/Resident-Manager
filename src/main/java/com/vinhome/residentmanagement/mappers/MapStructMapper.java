@@ -8,6 +8,7 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 import org.mapstruct.NullValuePropertyMappingStrategy;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -23,13 +24,13 @@ public interface MapStructMapper {
 
     @Mapping(target = "roles", ignore = true)
     @Mapping(target = "acceptedStatus", ignore = true)
-    @Mapping(source = "houseId", target = "house.id")
-    @Mapping(source = "gateId", target = "gate.id")
+    @Mapping(target = "house", ignore = true)
+    @Mapping(target = "gate", ignore = true)
     User userPostDtoToUser(UserPostDto userPostDto);
 
     @Mapping(target = "readStatus", ignore = true)
-    @Mapping(source = "gateId", target = "gate.id")
-    @Mapping(source = "qrCreatorId", target = "qrCreator.id")
+    @Mapping(target = "gate", ignore = true)
+    @Mapping(target = "qrCreator", ignore = true)
     History historyPostDtoToHistory(HistoryPostDto historyPostDto);
 
     HistoryGetDto historyToHistoryGetDto(History history);
@@ -39,6 +40,7 @@ public interface MapStructMapper {
     List<HouseDto> housesToHouseDtos(List<House> houses);
 
     List<GateDto> gatesToGateDtos(List<Gate> gates);
+    List<RoleDto> rolesToRoleDtos(List<Role> roles);
 
     List<HistoryGetDto> historiesToHistoryGetDtos(List<History> histories);
 
@@ -53,13 +55,13 @@ public interface MapStructMapper {
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "password", ignore = true)
     @Mapping(target = "roles", ignore = true)
-    @Mapping(source = "houseId", target = "house.id")
-    @Mapping(source = "gateId", target = "gate.id")
+    @Mapping(target = "house", ignore = true)
+    @Mapping(target = "gate", ignore = true)
     void updateUserFromDTO(UserPostDto userDTO, @MappingTarget User user);
 
     @Mapping(target = "id", ignore = true)
-    @Mapping(source = "gateId", target = "gate.id")
-    @Mapping(source = "qrCreatorId", target = "qrCreator.id")
+    @Mapping(target = "gate", ignore = true)
+    @Mapping(target = "qrCreator", ignore = true)
     void updateHistoryFromDTO(HistoryPostDto historyDto, @MappingTarget History history);
 
     @Mapping(target = "id", ignore = true)

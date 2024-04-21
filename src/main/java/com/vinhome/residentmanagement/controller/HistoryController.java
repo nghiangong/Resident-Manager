@@ -7,11 +7,15 @@ import com.vinhome.residentmanagement.dtos.UserPostDto;
 import com.vinhome.residentmanagement.exception.EntityNotFoundException;
 import com.vinhome.residentmanagement.service.HistoryService;
 import com.vinhome.residentmanagement.service.UserService;
+import org.springframework.data.domain.Page;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Date;
 import java.util.List;
 
+@CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
 @RequestMapping("/api/v1")
 public class HistoryController {
@@ -28,8 +32,23 @@ public class HistoryController {
     }
 
     @GetMapping("/histories")
-    public List<HistoryGetDto> getAllHistories() {
-        return historyService.getAllHistories();
+    public ResponseEntity<List<HistoryGetDto>> getAllHistories(@RequestParam(required = false) Long userId) {
+        return ResponseEntity.ok(historyService.getAllHistories(userId));
+    }
+
+    @GetMapping("/historiesPerDay")
+    public ResponseEntity<Long> getAllHistoriesPerDay(@RequestParam Date date, @RequestParam Long userId) {
+        return ResponseEntity.ok(historyService.countEntryExitPerDay(date, userId));
+    }
+
+    @GetMapping("/histories/unread")
+    public ResponseEntity<Integer> getAllHistoriesUnread(@RequestParam Long userId) {
+        return ResponseEntity.ok(historyService.countUnreadNotification(userId));
+    }
+
+    @GetMapping("/histories/page")
+    public ResponseEntity<Page<HistoryGetDto>> getAllHistoriesPage(@RequestParam int pageNumber, @RequestParam int pageSize, @RequestParam(required = false) Long gateId) {
+        return ResponseEntity.ok(historyService.findAllHistories(pageNumber, pageSize, gateId));
     }
 
     @GetMapping("/histories/{id}")

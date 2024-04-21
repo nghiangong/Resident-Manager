@@ -12,11 +12,12 @@ import java.util.Date;
 public class HistoryGetDto {
     private Long id;
     private String name;
-    private String gender;
+    private boolean gender;
     private LocalDateTime date;
     private boolean isResident;
     private Date deletedAt;
     private GateDto gate;
     private UserGetDto qrCreator;
     private boolean readStatus;
+    private String note;
 }

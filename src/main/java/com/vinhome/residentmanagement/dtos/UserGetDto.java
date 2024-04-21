@@ -12,13 +12,13 @@ public class UserGetDto {
     private Long id;
     private String name;
     private String phone;
-    private String userName;
+    private String username;
     private String email;
     private boolean acceptedStatus;
     private boolean gender;
     private String image;
     private Date date;
-    private int ownId;
+    private Long ownId;
     private String idCard;
     private boolean createQrPermission;
     private Date deletedAt;
