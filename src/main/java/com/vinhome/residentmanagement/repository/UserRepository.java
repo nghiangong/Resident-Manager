@@ -18,12 +18,22 @@ public interface UserRepository extends JpaRepository<User, Long> {
     @Query("select u from User u where (u.ownId = :ownId or u.id = :ownId) and u.deletedAt is null")
     List<User> getFamilyMembers(Long ownId);
 
-    @Query("select u from User u  right join u.roles r WHERE r.name = 'ROLE_USER' AND u.acceptedStatus = :acceptedStatus and u.deletedAt is null")
-    List<User> findAllResidents(boolean acceptedStatus);
+    @Query("select u from User u " +
+            "right join u.roles r " +
+            "WHERE r.name = 'ROLE_USER' " +
+            "AND u.acceptedStatus = :acceptedStatus " +
+            "AND (:keyword is null or concat(u.name, COALESCE(u.email, ''), u.phone, u.username, u.house.name) LIKE %:keyword% ) " +
+            "AND u.deletedAt is null")
+    List<User> findAllResidents(boolean acceptedStatus, String keyword);
 
     @Query("select count (u) from User u  right join u.roles r WHERE r.name = 'ROLE_USER' AND u.acceptedStatus = true and u.deletedAt is not null")
     Long countLeavedResidents();
 
-    @Query("select u from User u  right join u.roles r WHERE r.name = 'ROLE_GATEKEEPER' and (:acceptedStatus is null or u.acceptedStatus = :acceptedStatus) and u.deletedAt is null")
-    List<User> findAllGateKeepers(Boolean acceptedStatus);
+    @Query("select u from User u " +
+            "right join u.roles r " +
+            "WHERE r.name = 'ROLE_GATEKEEPER' " +
+            "AND (:keyword is null or concat(u.name, COALESCE(u.email, ''), u.phone, u.username, u.gate.name) LIKE %:keyword% ) " +
+            "AND (:acceptedStatus IS NULL OR u.acceptedStatus = :acceptedStatus) " +
+            "AND u.deletedAt IS NULL")
+    List<User> findAllGateKeepers(Boolean acceptedStatus, String keyword);
 }

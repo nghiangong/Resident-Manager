@@ -13,6 +13,8 @@ public interface HouseRepository extends JpaRepository<House, Long> {
     @Query("SELECT COUNT(u) > 0 FROM User u WHERE u.deletedAt IS NULL AND u.house.id = :houseId")
     boolean livingPeopleExist(Long houseId);
 
-    @Query("select h from House h WHERE h.deletedAt is null")
-    List<House> findAllHouses();
+    @Query("select h from House h " +
+            "WHERE h.deletedAt IS NULL " +
+            "AND (:keyword is null or concat(h.name, h.address, COALESCE(h.note, '')) LIKE %:keyword% )")
+    List<House> findAllHouses(String keyword);
 }

@@ -64,8 +64,8 @@ public class UserController {
     }
 
     @GetMapping("/users/page")
-    public ResponseEntity<Page<UserGetDto>> getAllResidents(@RequestParam int pageNumber, @RequestParam int pageSize, @RequestParam boolean acceptedStatus) {
-        return ResponseEntity.ok(userService.findAllUser(pageNumber, pageSize, acceptedStatus));
+    public ResponseEntity<Page<UserGetDto>> getAllResidents(@RequestParam int pageNumber, @RequestParam int pageSize, @RequestParam boolean acceptedStatus, @RequestParam(required = false) String keyword) {
+        return ResponseEntity.ok(userService.findAllUser(pageNumber, pageSize, acceptedStatus, keyword));
     }
 
     @GetMapping("/statistic/pieChart")
@@ -84,8 +84,8 @@ public class UserController {
     }
 
     @GetMapping("/gateKeepers")
-    public ResponseEntity<Page<UserGetDto>> getAllGateKeepers(@RequestParam int pageNumber, @RequestParam int pageSize) {
-        return ResponseEntity.ok(userService.findAllGateKeeper(pageNumber, pageSize));
+    public ResponseEntity<Page<UserGetDto>> getAllGateKeepers(@RequestParam int pageNumber, @RequestParam int pageSize, @RequestParam(required = false) String keyword) {
+        return ResponseEntity.ok(userService.findAllGateKeeper(pageNumber, pageSize, keyword));
     }
 
     @PreAuthorize("hasRole('USER')")

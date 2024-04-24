@@ -51,9 +51,9 @@ public class HouseServiceImpl implements HouseService {
     }
 
     @Override
-    public Page<HouseDto> findAllHouse(int pageNumber, int pageSize) {
+    public Page<HouseDto> findAllHouse(int pageNumber, int pageSize, String keyword) {
         PageRequest pageRequest = PageRequest.of(pageNumber - 1, pageSize);
-        List<House> houses = houseRepository.findAllHouses();
+        List<House> houses = houseRepository.findAllHouses(keyword);
         List<HouseDto> houseDtos = mapStructMapper.housesToHouseDtos(houses);
         int start = (int) pageRequest.getOffset();
         int end = Math.min((start + pageRequest.getPageSize()), houseDtos.size());

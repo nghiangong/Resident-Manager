@@ -49,9 +49,9 @@ public class GateServiceImpl implements GateService {
     }
 
     @Override
-    public Page<GateDto> findAllGate(int pageNumber, int pageSize) {
+    public Page<GateDto> findAllGate(int pageNumber, int pageSize, String keyword) {
         PageRequest pageRequest = PageRequest.of(pageNumber - 1, pageSize);
-        List<Gate> gates = gateRepository.findAllGates();
+        List<Gate> gates = gateRepository.findAllGates(keyword);
         List<GateDto> gateDtos = mapStructMapper.gatesToGateDtos(gates);
         int start = (int) pageRequest.getOffset();
         int end = Math.min((start + pageRequest.getPageSize()), gateDtos.size());

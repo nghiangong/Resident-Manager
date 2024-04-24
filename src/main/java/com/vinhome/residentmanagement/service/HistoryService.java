@@ -13,7 +13,7 @@ import java.util.List;
 public interface HistoryService {
     HistoryGetDto createHistory(HistoryPostDto historyPostDto);
     HistoryGetDto getHistoryById(Long historyId);
-    Page<HistoryGetDto> findAllHistories(int pageNumber, int pageSize, Long gateId);
+    Page<HistoryGetDto> findAllHistories(int pageNumber, int pageSize, Long gateId, String keyword, Date startDate, Date endDate);
     OverviewStatistic overviewStatistic(int month, int year);
     List<DayStatistic> monthStatistic(int month, int year);
     List<HistoryGetDto> getAllHistories(Long userId);

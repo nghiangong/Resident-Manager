@@ -47,8 +47,8 @@ public class HistoryController {
     }
 
     @GetMapping("/histories/page")
-    public ResponseEntity<Page<HistoryGetDto>> getAllHistoriesPage(@RequestParam int pageNumber, @RequestParam int pageSize, @RequestParam(required = false) Long gateId) {
-        return ResponseEntity.ok(historyService.findAllHistories(pageNumber, pageSize, gateId));
+    public ResponseEntity<Page<HistoryGetDto>> getAllHistoriesPage(@RequestParam int pageNumber, @RequestParam int pageSize, @RequestParam(required = false) Long gateId, @RequestParam(required = false) String keyword, @RequestParam(required = false) Date startDate, @RequestParam(required = false) Date endDate) {
+        return ResponseEntity.ok(historyService.findAllHistories(pageNumber, pageSize, gateId, keyword, startDate, endDate));
     }
 
     @GetMapping("/histories/{id}")
@@ -58,7 +58,7 @@ public class HistoryController {
     }
 
     @PutMapping("/histories/{id}")
-    public ResponseEntity<HistoryGetDto> updateHistory(@PathVariable Long id, @RequestBody HistoryPostDto historyPostDto) throws RuntimeException{
+    public ResponseEntity<HistoryGetDto> updateHistory(@PathVariable Long id, @RequestBody HistoryPostDto historyPostDto) throws RuntimeException {
         HistoryGetDto updatedHistory = historyService.updateHistory(id, historyPostDto);
         return ResponseEntity.ok(updatedHistory);
     }

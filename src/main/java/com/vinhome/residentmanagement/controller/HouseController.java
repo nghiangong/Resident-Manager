@@ -36,8 +36,8 @@ public class HouseController {
     }
 
     @GetMapping("/houses/page")
-    public ResponseEntity<Page<HouseDto>> getHouses(@RequestParam int pageNumber, @RequestParam int pageSize) {
-        return ResponseEntity.ok(houseService.findAllHouse(pageNumber, pageSize));
+    public ResponseEntity<Page<HouseDto>> getHouses(@RequestParam int pageNumber, @RequestParam int pageSize, @RequestParam(required = false) String keyword) {
+        return ResponseEntity.ok(houseService.findAllHouse(pageNumber, pageSize, keyword));
     }
 
     @GetMapping("/houses/{id}")

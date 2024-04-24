@@ -41,7 +41,7 @@ public class UserServiceImpl implements UserService {
         this.encoder = encoder;
     }
 
-    @Override
+        @Override
     public UserGetDto createUser(UserPostDto user) {
         if (user.getRoleIds().isEmpty()) {
             throw new NullPointerException("Người dùng chưa có vai trò");
@@ -61,6 +61,34 @@ public class UserServiceImpl implements UserService {
             return mapStructMapper.userToUserGetDto(userRepository.save(newUser));
         }
     }
+//    @Override
+//    public UserGetDto createUser(UserPostDto user) {
+//        try {
+//            if (user.getRoleIds().isEmpty()) {
+//                throw new NullPointerException("Người dùng chưa có vai trò");
+//            } else {
+//                User newUser = mapStructMapper.userPostDtoToUser(user);
+//                if (user.getGateId() != null) {
+//                    Gate newGate = gateRepository.findById(user.getGateId()).orElseThrow(() -> new EntityNotFoundException(Gate.class, "id", user.getGateId().toString()));
+//                    newUser.setGate(newGate);
+//                }
+//                newUser.setAcceptedStatus(true);
+//                newUser.setPassword(encoder.encode(user.getPassword()));
+//                for (Long id : user.getRoleIds()) {
+//                    Role newRole = roleRepository.findById(id)
+//                            .orElseThrow(() -> new EntityNotFoundException(Role.class, "id", id.toString()));
+//                    newUser.addRole(newRole);
+//                }
+//                return mapStructMapper.userToUserGetDto(userRepository.save(newUser));
+//            }
+//        } catch (NullPointerException | EntityNotFoundException ex) {
+//            // Xử lý ngoại lệ tại đây
+//            ex.printStackTrace(); // hoặc log ngoại lệ
+//            // Trả về một giá trị hoặc thực hiện các thao tác phù hợp khác nếu cần
+//            return null; // hoặc trả về một giá trị mặc định hoặc thích hợp
+//        }
+//    }
+
 
     @Override
     public UserGetDto getUserById(Long userId) {
@@ -84,24 +112,24 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Page<UserGetDto> findAllUser(int pageNumber, int pageSize, boolean acceptedStatus) {
+    public Page<UserGetDto> findAllUser(int pageNumber, int pageSize, boolean acceptedStatus, String keyword) {
         PageRequest pageRequest = PageRequest.of(pageNumber - 1, pageSize);
-        List<User> users = userRepository.findAllResidents(acceptedStatus);
+        List<User> users = userRepository.findAllResidents(acceptedStatus, keyword);
         return getUserGetDtos(pageRequest, users);
     }
 
     @Override
     public PieChartStatistic statisticPieChart() {
-        int living = userRepository.findAllResidents(true).size();
+        int living = userRepository.findAllResidents(true, null).size();
         Long leaved = userRepository.countLeavedResidents();
-        int unApproved = userRepository.findAllResidents(false).size();
+        int unApproved = userRepository.findAllResidents(false, null).size();
         return new PieChartStatistic(living, leaved, unApproved);
     }
 
     @Override
-    public Page<UserGetDto> findAllGateKeeper(int pageNumber, int pageSize) {
+    public Page<UserGetDto> findAllGateKeeper(int pageNumber, int pageSize, String keyword) {
         PageRequest pageRequest = PageRequest.of(pageNumber - 1, pageSize);
-        List<User> users = userRepository.findAllGateKeepers(null);
+        List<User> users = userRepository.findAllGateKeepers(null, keyword);
         return getUserGetDtos(pageRequest, users);
     }
 
@@ -129,7 +157,7 @@ public class UserServiceImpl implements UserService {
             } else {
                 oldUser.clearRoles();
                 for (Long idDto : newUser.getRoleIds()) {
-                    if(idDto == 2 && oldUser.getPrivateKey() == null){
+                    if (idDto == 2 && oldUser.getPrivateKey() == null) {
                         KeyPairGenerator kpg = KeyPairGenerator.getInstance("RSA");
                         kpg.initialize(1024);
                         KeyPair keyPair = kpg.genKeyPair();
@@ -140,17 +168,17 @@ public class UserServiceImpl implements UserService {
                             .orElseThrow(() -> new EntityNotFoundException(Role.class, "id", idDto.toString()));
                     oldUser.addRole(newRole);
                 }
-                if(newUser.getHouseId() != null) {
+                if (newUser.getHouseId() != null) {
                     House newHouse = houseRepository.findById(newUser.getHouseId())
                             .orElseThrow(() -> new EntityNotFoundException(House.class, "id", newUser.getHouseId().toString()));
                     oldUser.setHouse(newHouse);
                 }
-                if(newUser.getGateId() != null) {
+                if (newUser.getGateId() != null) {
                     Gate newGate = gateRepository.findById(newUser.getGateId())
                             .orElseThrow(() -> new EntityNotFoundException(Gate.class, "id", newUser.getGateId().toString()));
                     oldUser.setGate(newGate);
                 }
-                if(newUser.getPassword() != null) {
+                if (newUser.getPassword() != null) {
                     oldUser.setPassword(encoder.encode(newUser.getPassword()));
                 }
                 return mapStructMapper.userToUserGetDto(userRepository.save(oldUser));

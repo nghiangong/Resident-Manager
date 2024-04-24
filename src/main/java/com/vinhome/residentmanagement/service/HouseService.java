@@ -15,7 +15,7 @@ public interface HouseService {
     HouseDto getHouseById(Long houseId);
 
     List<HouseDto> getAllHouses();
-    Page<HouseDto> findAllHouse(int pageNumber, int pageSize);
+    Page<HouseDto> findAllHouse(int pageNumber, int pageSize, String keyword);
 
     HouseDto updateHouse(Long id, HouseDto house);
 

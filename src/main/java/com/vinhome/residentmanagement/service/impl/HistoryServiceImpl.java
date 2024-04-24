@@ -59,9 +59,9 @@ public class HistoryServiceImpl implements HistoryService {
     }
 
     @Override
-    public Page<HistoryGetDto> findAllHistories(int pageNumber, int pageSize, Long gateId) {
+    public Page<HistoryGetDto> findAllHistories(int pageNumber, int pageSize, Long gateId, String keyword, Date startDate, Date endDate) {
         PageRequest pageRequest = PageRequest.of(pageNumber - 1, pageSize);
-        List<History> histories = historyRepository.findAllHistories(gateId, null, null);
+        List<History> histories = historyRepository.findAllHistories(gateId, null, null, keyword, startDate, endDate);
         List<HistoryGetDto> historyGetDtos = mapStructMapper.historiesToHistoryGetDtos(histories);
         int start = (int) pageRequest.getOffset();
         int end = Math.min((start + pageRequest.getPageSize()), historyGetDtos.size());
@@ -70,8 +70,8 @@ public class HistoryServiceImpl implements HistoryService {
 
     @Override
     public OverviewStatistic overviewStatistic(int month, int year) {
-        int totalResidents = userRepository.findAllResidents(true).size();
-        int totalGateKeepers = userRepository.findAllGateKeepers(true).size();
+        int totalResidents = userRepository.findAllResidents(true, null).size();
+        int totalGateKeepers = userRepository.findAllGateKeepers(true, null).size();
         Long totalVisitorPerMonth = historyRepository.countVisitorPerMonth(null, month, year, false);
         return new OverviewStatistic(totalResidents, totalGateKeepers, totalVisitorPerMonth);
     }
@@ -93,13 +93,13 @@ public class HistoryServiceImpl implements HistoryService {
 
     @Override
     public List<HistoryGetDto> getAllHistories(Long userId) {
-        List<History> histories = historyRepository.findAllHistories(null, userId, null);
+        List<History> histories = historyRepository.findAllHistories(null, userId, null, null, null, null);
         return mapStructMapper.historiesToHistoryGetDtos(histories);
     }
 
     @Override
     public int countUnreadNotification(Long userId) {
-        List<History> histories = historyRepository.findAllHistories(null, userId, false);
+        List<History> histories = historyRepository.findAllHistories(null, userId, false, null, null, null);
         return histories.size();
     }
 

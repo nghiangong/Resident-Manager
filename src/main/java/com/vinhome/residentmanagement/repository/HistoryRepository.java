@@ -18,8 +18,11 @@ public interface HistoryRepository extends JpaRepository<History, Long> {
             "AND (:gateId IS NULL OR h.gate.id = :gateId) " +
             "AND (:userId IS NULL OR h.qrCreator.id = :userId) " +
             "AND (:readStatus IS NULL OR h.readStatus = :readStatus ) " +
+            "AND (:startDate IS NULL OR (YEAR(h.date) >= YEAR(:startDate) AND MONTH(h.date) >= MONTH(:startDate) AND DAY(h.date) >= DAY(:startDate)) ) " +
+            "AND (:endDate IS NULL OR (YEAR(h.date) <= YEAR(:endDate) AND MONTH(h.date) <= MONTH(:endDate) AND DAY(h.date) <= DAY(:endDate)) ) " +
+            "AND (:keyword is null or concat(h.name, h.gate.name, h.qrCreator.name) LIKE %:keyword% ) " +
             "ORDER BY h.date DESC")
-    List<History> findAllHistories(Long gateId, Long userId, Boolean readStatus);
+    List<History> findAllHistories(Long gateId, Long userId, Boolean readStatus, String keyword, Date startDate, Date endDate);
 
     @Query("SELECT COUNT(h) FROM History h " +
             "WHERE YEAR(h.date) = YEAR(:date) " +

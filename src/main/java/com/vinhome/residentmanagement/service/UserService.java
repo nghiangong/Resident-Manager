@@ -20,10 +20,10 @@ public interface UserService {
 
     List<RoleDto> getAllRoles();
 
-    Page<UserGetDto> findAllUser(int pageNumber, int pageSize, boolean acceptedStatus);
+    Page<UserGetDto> findAllUser(int pageNumber, int pageSize, boolean acceptedStatus, String keyword);
     PieChartStatistic statisticPieChart();
 
-    Page<UserGetDto> findAllGateKeeper(int pageNumber, int pageSize);
+    Page<UserGetDto> findAllGateKeeper(int pageNumber, int pageSize, String keyword);
 
     List<UserGetDto> getFamilyMembers(Long ownId);
 

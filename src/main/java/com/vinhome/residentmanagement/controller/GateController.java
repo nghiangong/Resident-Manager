@@ -34,8 +34,8 @@ public class GateController {
     }
 
     @GetMapping("/gates/page")
-    public ResponseEntity<Page<GateDto>> getGates(@RequestParam int pageNumber, @RequestParam int pageSize) {
-        return ResponseEntity.ok(gateService.findAllGate(pageNumber, pageSize));
+    public ResponseEntity<Page<GateDto>> getGates(@RequestParam int pageNumber, @RequestParam int pageSize, @RequestParam(required = false) String keyword) {
+        return ResponseEntity.ok(gateService.findAllGate(pageNumber, pageSize, keyword));
     }
 
     @GetMapping("/gates/{id}")
