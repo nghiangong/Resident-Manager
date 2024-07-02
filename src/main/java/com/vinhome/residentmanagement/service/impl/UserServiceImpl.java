@@ -141,8 +141,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<UserGetDto> getFamilyMembers(Long ownId) {
-        List<User> users = userRepository.getFamilyMembers(ownId);
+    public List<UserGetDto> getFamilyMembers(Long houseId) {
+        List<User> users = userRepository.getFamilyMembers(houseId);
         return mapStructMapper.usersToUserGetDtos(users);
     }
 

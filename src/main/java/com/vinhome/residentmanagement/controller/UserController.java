@@ -89,7 +89,7 @@ public class UserController {
     }
 
     @PreAuthorize("hasRole('USER')")
-    @GetMapping("/users/{id}/family")
+    @GetMapping("/users/family/{id}")
     public ResponseEntity<List<UserGetDto>> getFamilyMembers(@PathVariable Long id) {
         return ResponseEntity.ok(userService.getFamilyMembers(id));
     }

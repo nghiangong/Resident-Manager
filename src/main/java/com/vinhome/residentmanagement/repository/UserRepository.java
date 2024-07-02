@@ -15,8 +15,8 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     Boolean existsByUsername(String username);
 
-    @Query("select u from User u where (u.ownId = :ownId or u.id = :ownId) and u.deletedAt is null")
-    List<User> getFamilyMembers(Long ownId);
+    @Query("select u from User u where u.house.id = :houseId and u.acceptedStatus = true and u.deletedAt is null")
+    List<User> getFamilyMembers(Long houseId);
 
     @Query("select u from User u " +
             "right join u.roles r " +

@@ -25,7 +25,7 @@ public interface UserService {
 
     Page<UserGetDto> findAllGateKeeper(int pageNumber, int pageSize, String keyword);
 
-    List<UserGetDto> getFamilyMembers(Long ownId);
+    List<UserGetDto> getFamilyMembers(Long houseId);
 
     UserGetDto updateUser(Long id, UserPostDto user) throws NoSuchAlgorithmException;
 
